@@ -1,25 +1,29 @@
-CREATE TABLE Vehicles (
-    vehicle_id SERIAL PRIMARY KEY,
+CREATE TABLE EntryVehicles (
+    id INT PRIMARY KEY,
     license_plate VARCHAR(20) UNIQUE NOT NULL,
-    size VARCHAR(10) NOT NULL,
+    size enum('small', 'medium', 'large') NOT NULL,
     entry_time TIMESTAMP,
-    exit_time TIMESTAMP,
-    assigned_spot INT
+    spot_id INT NULL,
+
+    FOREIGN KEY (spot_id) REFERENCES ParkingSpots(spot_id)
 );
 
 CREATE TABLE ParkingSpots (
-    spot_id SERIAL PRIMARY KEY,
-    size VARCHAR(10) NOT NULL,
+    id INT PRIMARY KEY,
+    size enum('small', 'medium', 'large') NOT NULL,
     floor INT NOT NULL,
     vehicle_id INT,
-    FOREIGN KEY (vehicle_id) REFERENCES Vehicles(vehicle_id)
+    status enum('reserved', 'open') NOT NULL,
+
+    FOREIGN KEY (vehicle_id) REFERENCES EntryVehicles(id)
 );
 
 CREATE TABLE Transactions (
-    transaction_id SERIAL PRIMARY KEY,
+    id INT PRIMARY KEY,
     vehicle_id INT,
     entry_time TIMESTAMP,
     exit_time TIMESTAMP,
     fee DECIMAL(10, 2),
-    FOREIGN KEY (vehicle_id) REFERENCES Vehicles(vehicle_id)
+
+    FOREIGN KEY (vehicle_id) REFERENCES EntryVehicles(id)
 );
