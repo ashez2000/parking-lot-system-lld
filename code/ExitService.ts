@@ -1,13 +1,14 @@
-import FeeCalcService from "./FeeCalcService";
-import { EntryVehicle, ExitVehicle } from "./Vehicle";
+import { FeeContext } from "./FeeContext";
+import { Transaction } from "./Transaction";
+import { EntryVehicle, VehicleManager } from "./Vehicle";
 
 class ExitService {
-  constructor(private feeCalc: FeeCalcService) {}
+  constructor(private vhManager: VehicleManager, private feeCalc: FeeContext) {}
 
-  checkOut(entryVehicle: EntryVehicle): ExitVehicle {
-    const exitTime = new Date();
-    const fee = this.feeCalc.calc(entryVehicle, exitTime);
-    return new ExitVehicle(entryVehicle, exitTime, fee);
+  checkOut(entryVehicle: EntryVehicle): Transaction {
+    const exitVh = this.vhManager.createExitVehicle(entryVehicle);
+    const fee = this.feeCalc.calc(exitVh);
+    return new Transaction(exitVh, fee);
   }
 }
 
