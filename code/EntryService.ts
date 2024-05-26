@@ -1,13 +1,16 @@
-import { AllocationService } from "./AllocationService";
-import { EntryVehicle, VehicleSize } from "./Vehicle";
+import { AllocationContext } from "./AllocationContext";
+import { EntryVehicle, Vehicle, VehicleManager, VehicleSize } from "./Vehicle";
 
 class EntryService {
-  constructor(private allocator: AllocationService) {}
+  constructor(
+    private allocator: AllocationContext,
+    private vehicleManager: VehicleManager
+  ) {}
 
-  chechIn(licencePlate: string, size: VehicleSize): EntryVehicle {
-    const spotId = this.allocator.alloc(size);
-    const vh = new EntryVehicle(licencePlate, size, new Date(), spotId);
-    return vh;
+  chechIn(vh: Vehicle): EntryVehicle {
+    const time = new Date();
+    const spot = this.allocator.alloc(vh);
+    return this.vehicleManager.createEntyVehicle(vh, time, spot);
   }
 }
 
